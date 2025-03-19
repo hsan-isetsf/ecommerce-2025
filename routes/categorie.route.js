@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 // Créer une instance de categorie.
 const Categorie = require('../models/categorie');
+const { verifyToken } = require('../middleware/veriftoken');
 // afficher la liste des categories.
 router.get('/', async (req, res, )=> {
     try {
@@ -13,7 +14,7 @@ router.get('/', async (req, res, )=> {
         }
 });
 // créer un nouvelle catégorie
-router.post('/', async (req, res) => {
+router.post('/',verifyToken, async (req, res) => {
 const { nomcategorie, imagecategorie} = req.body;
 const newCategorie = new Categorie({nomcategorie:nomcategorie,
 imagecategorie:imagecategorie})
@@ -34,7 +35,7 @@ res.status(404).json({ message: error.message });
 } 
 });
 // modifier une catégorie
-router.put('/:categorieId', async (req, res)=> {
+router.put('/:categorieId',verifyToken, async (req, res)=> {
     try { 
         const cat1 = await Categorie.findByIdAndUpdate( 
         req.params.categorieId, 
